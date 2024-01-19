@@ -5,6 +5,11 @@
  [Click here for Live site](#)
 
 
+https://axios-http.com/docs/instance
+
+https://react.dev/reference/react/apis
+
+https://react-bootstrap.github.io/docs/components/accordion
 
 # React + Vite
 

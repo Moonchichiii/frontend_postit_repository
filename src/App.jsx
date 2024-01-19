@@ -1,18 +1,25 @@
-import { useState } from 'react'
-import './App.css'
+import React, { useEffect } from "react";
+import LoginForm from "./components/Authentication/LoginForm/LoginForm";
+import RegistrationForm from "./components/Authentication/RegistrationForm/RegistrationForm";
+import { useAuth } from "./components/Authentication/AuthContext";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { token, logOut } = useAuth();
 
   return (
-    <>
-      <div>
-        
-      </div>
-
-      
-    </>
-  )
+    <div>
+      <h1>User Authentication</h1>
+      {!token ? (
+        <>
+          <LoginForm />
+          <RegistrationForm />
+        </>
+      ) : (
+        <button onClick={logOut}>Logout</button>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
