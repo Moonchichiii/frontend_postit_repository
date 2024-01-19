@@ -8,4 +8,17 @@ const axiosInstance = axios.create({
   },
 });
 
-export default axiosInstance;
+axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+
+      if (error.response && error.response.status === 401) {
+        
+      }
+
+      return Promise.reject(error);
+    }
+  );
+  
+  export default axiosInstance;
+

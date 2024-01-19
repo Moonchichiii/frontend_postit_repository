@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
       });
       setToken(response.data.access);
     } catch (error) {
-      console.log(error, error.response);
+        throw error.response.data;
     }
   };
 
@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
       });
       setToken(response.data.access);
     } catch (error) {
-      console.log(error, error.response);
+        throw error.response.data;
     }
   };
 

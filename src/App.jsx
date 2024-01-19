@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import LoginForm from "./components/Authentication/LoginForm/LoginForm";
 import RegistrationForm from "./components/Authentication/RegistrationForm/RegistrationForm";
 import { useAuth } from "./components/Authentication/AuthContext";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+
 
 function App() {
   const { token, logOut } = useAuth();
