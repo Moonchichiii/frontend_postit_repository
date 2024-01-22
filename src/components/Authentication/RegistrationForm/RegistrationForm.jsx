@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { useAuth } from "../AuthContext";
 import { Alert, Button } from "react-bootstrap";
 
-const RegistrationForm = () => {
+
+const RegistrationForm = ({ onSuccess }) => {
   const [userData, setUserData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+    
+  const { signUp, errors, setErrors, token } = useAuth();
   
-  const { signUp, errors, setErrors } = useAuth();
   
 
   const handleInputChange = (e) => {
@@ -25,7 +27,11 @@ const RegistrationForm = () => {
       setErrors({ ...errors, confirmPassword: ["Passwords do not match!"] });
       return;
     }
-    await signUp(userData.username, userData.email, userData.password, userData.confirmPassword);
+    
+    const success = await signUp(userData.username, userData.email, userData.password, userData.confirmPassword);
+    if (success && typeof onSuccess === 'function') {
+      onSuccess(); 
+    }
   };
 
   return (
@@ -107,6 +113,7 @@ const RegistrationForm = () => {
         Register
       </Button>
     </form>
+
   );
 };
 

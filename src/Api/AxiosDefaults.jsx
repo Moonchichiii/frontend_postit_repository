@@ -8,6 +8,10 @@ const axiosInstance = axios.create({
   },
 });
 
-  
-  export default axiosInstance;
+export const ImageInstance = {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+};
 
+export default axiosInstance;

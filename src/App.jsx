@@ -1,27 +1,35 @@
-import React, { useEffect } from "react";
-import LoginForm from "./components/Authentication/LoginForm/LoginForm";
-import RegistrationForm from "./components/Authentication/RegistrationForm/RegistrationForm";
-import { useAuth } from "./components/Authentication/AuthContext";
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/Authentication/Routing/ProtectedRoute';
+import LandingPage from './components/Common/LandingPage/LandingPage';         
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 
-function App() {
-  const { token, logOut } = useAuth();
 
+const Dashboard = lazy(() => import('./components/Common/DashBoard/DashBoard'));
+
+function App() {
+
+  
   return (
-    <div>
-      <h1>User Authentication</h1>
-      {!token ? (
-        <>
-          <LoginForm />
-          <RegistrationForm />
-        </>
-      ) : (
-        <button onClick={logOut}>Logout</button>
-      )}
-    </div>
+    <Router>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          
+        </Routes>
+      </Suspense>
+    </Router>
   );
-}
+};
+
+
 
 export default App;

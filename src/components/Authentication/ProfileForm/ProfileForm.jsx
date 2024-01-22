@@ -1,4 +1,49 @@
- 
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
+import { AuthContext } from "../AuthContext";
+
+import updateProfile from "../../hooks/ProfileUpdate";
+
+function ProfileForm({ onProfileUpdate }) {
+  const { user, token, setUser } = useContext(AuthContext);
+  const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMG_UR;
+  const [profileImage, setProfileImage] = useState(null);
+  const [bio, setBio] = useState("");
+  const [profileImagePreview, setProfileImagePreview] =
+    useState(defaultImageUrl);
+  const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      setProfileImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("bio", bio);
+    if (profileImage) {
+      formData.append("profile_image", profileImage);
+    }
+
+    try {
+      await updateProfile(user.id, formData, token);
+      onProfileUpdate();
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(
+        "Error updating profile:",
+        error.response?.data || error.message
+      );
+      alert("Error updating profile. Please try again.");
+    }
+  };
+
+  return (
     <div className="profile-setup-container">
       {profileImagePreview && (
         <img
@@ -27,4 +72,5 @@
     </div>
   );
 }
-export default ProfileSetup;
+
+export default ProfileForm;
