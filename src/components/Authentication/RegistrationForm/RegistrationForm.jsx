@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { Alert, Button } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 
-
-const RegistrationForm = ({ onSuccess }) => {
+const RegistrationForm = () => {
   const [userData, setUserData] = useState({
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
-    
+
   const { signUp, errors, setErrors, token } = useAuth();
-  
-  
+  const navigate = useNavigate(); 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({ ...prevData, [name]: value }));
-    
   };
 
   const handleSubmit = async (e) => {
@@ -27,17 +25,30 @@ const RegistrationForm = ({ onSuccess }) => {
       setErrors({ ...errors, confirmPassword: ["Passwords do not match!"] });
       return;
     }
-    
-    const success = await signUp(userData.username, userData.email, userData.password, userData.confirmPassword);
-    if (success && typeof onSuccess === 'function') {
-      onSuccess(); 
+
+    const success = await signUp(
+      userData.username,
+      userData.email,
+      userData.password,
+      userData.confirmPassword
+    );
+    if (success) {
+      navigate("/dashboard");
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
-        <label htmlFor="username" className="form-label">Username</label>
+        <label htmlFor="username" className="form-label">
+          Username
+        </label>
         <input
           type="text"
           className="form-control"
@@ -49,12 +60,17 @@ const RegistrationForm = ({ onSuccess }) => {
           required
           autoComplete="username"
         />
-        {errors.register?.username && errors.register.username.map((message, index) => (
-        <Alert key={`username-error-${index}`} variant="danger">{message}</Alert>
-      ))}
+        {errors.register?.username &&
+          errors.register.username.map((message, index) => (
+            <Alert key={`username-error-${index}`} variant="danger">
+              {message}
+            </Alert>
+          ))}
       </div>
       <div className="mb-3">
-        <label htmlFor="email" className="form-label">Email</label>
+        <label htmlFor="email" className="form-label">
+          Email
+        </label>
         <input
           type="email"
           className="form-control"
@@ -65,10 +81,12 @@ const RegistrationForm = ({ onSuccess }) => {
           placeholder="Email"
           required
         />
-         {errors.register?.email && errors.register.email.map((message, index) => (
-        <Alert key={`email-error-${index}`} variant="danger">{message}</Alert>
-      ))}
-
+        {errors.register?.email &&
+          errors.register.email.map((message, index) => (
+            <Alert key={`email-error-${index}`} variant="danger">
+              {message}
+            </Alert>
+          ))}
       </div>
       <div className="mb-3">
         <label htmlFor="password" className="form-label">
@@ -85,7 +103,6 @@ const RegistrationForm = ({ onSuccess }) => {
           required
           autoComplete="new-password"
         />
-      
       </div>
       <div className="mb-3">
         <label htmlFor="confirmPassword" className="form-label">
@@ -102,18 +119,24 @@ const RegistrationForm = ({ onSuccess }) => {
           required
           autoComplete="new-password"
         />
-        
-        {errors.confirmPassword && errors.confirmPassword.map((message, index) => (
-          <Alert key={`confirmPassword-error-${index}`} variant="danger">{message}</Alert>
-        ))}
-      </div>
-      
-      {errors.register?.non_field_errors && <Alert variant="danger">{errors.register.non_field_errors}</Alert>}
-      <Button variant="primary" type="submit">
-        Register
-      </Button>
-    </form>
 
+        {errors.confirmPassword &&
+          errors.confirmPassword.map((message, index) => (
+            <Alert key={`confirmPassword-error-${index}`} variant="danger">
+              {message}
+            </Alert>
+          ))}
+      </div>
+
+      {errors.register?.non_field_errors && (
+        <Alert variant="danger">{errors.register.non_field_errors}</Alert>
+      )}
+      
+        <Button variant="primary" type="submit">
+          Register
+        </Button>
+      
+    </form>
   );
 };
 

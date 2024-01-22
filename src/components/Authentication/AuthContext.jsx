@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
 import axiosInstance from "../../Api/AxiosDefaults";
-import updateProfile from "./ProfileForm/ProfileContext";
-import ImageHandler from "../hooks/ImageHandler";
+
 
 export const AuthContext = createContext();
 
@@ -11,20 +10,26 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [errors, setErrors] = useState({});
+  const [Registered, setRegistered] = useState(false);
+
 
   // functions for user authentication
   const signIn = async (username, password) => {
     try {
-      const response = await axiosInstance.post("/users/token/", {
-        username,
-        password
-      });
-      setToken(response.data.access);
-      setUser(response.data.user);
-      setErrors({});
+      const response = await axiosInstance.post("/users/token/", { username, password });
+      console.log("Login response data:", response.data);
+  
+      if (response.data.access && response.data.user_id) {
+
+        setUser({ ...user, id: response.data.user_id });
+        setToken(response.data.access);
+      } else {
+        console.error("Login error: Data is incomplete."); 
+        setErrors({ login: "Login failed. Please try again." });
+      }
     } catch (error) {
       const errorData = error.response?.data;
-
+  
       if (errorData && errorData.errors && Array.isArray(errorData.errors)) {
         const detailedError = errorData.errors
           .map((err) => err.detail)
@@ -44,10 +49,29 @@ export const AuthProvider = ({ children }) => {
         password,
         confirm_password: confirmPassword
       });
-      setToken(response.data.access);
+      
+      console.log("Sign Up Response:", response.data)
+      if (response.data.user && response.data.user.id) {
+        
+        setUser(response.data.user);
+        console.log("API response:", response.data);
+        setToken(response.data.access);
+        console.log("seTtoken:", response.data.access);
+
+
+        setRegistered(true);
+        
+      } else {
+        
+        console.error("Registration data is incomplete. No user ID present.");
+        setErrors({ register: "Registration failed. Please try again." });
+        return false; 
+      }
+  
       setErrors({});
       return true;
     } catch (error) {
+      console.error("Sign Up Error:", error.response?.data || error);
       console.error("Registration error:", error.response?.data);
       setErrors({
         register:
@@ -70,18 +94,18 @@ export const AuthProvider = ({ children }) => {
       setUser,
       token,
       setToken,
-      signIn,
-      signUp,
+      signIn,      
       logOut,
+      signUp,
+      Registered, 
+      setRegistered,
       errors,
       setErrors,
-      updateProfile,
-      ImageHandler
     }),
-    [user, token, errors, updateProfile]
+    [user, token, errors]
   );
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
+};       

@@ -5,27 +5,28 @@ import { Alert, Button } from 'react-bootstrap';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const { signIn, errors, token } = useAuth(); 
+  const { signIn, errors,token } = useAuth();
   const navigate = useNavigate();
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Form input ${name} changed to:`, value); 
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  // redirects to dashboard if token is present. 
+  // Redirect to dashboard if token is present and there are no errors.
   useEffect(() => {
     if (token) {
-        navigate('/dashboard');
+      navigate('/dashboard');
     }
-}, [token, navigate]);
-
+  }, [token, navigate]);
+  
+  
   // Handles form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-     await signIn(formData.username, formData.password);
-     navigate('/dashboard');    
+    console.log("Submitting login form with data:", formData);
+    await signIn(formData.username, formData.password);   
     };
   
 

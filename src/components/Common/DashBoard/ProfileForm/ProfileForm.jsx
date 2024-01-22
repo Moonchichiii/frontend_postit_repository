@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import { AuthContext } from "../AuthContext";
+import { AuthContext } from "../../../Authentication/AuthContext";
 
-import updateProfile from "../../hooks/ProfileUpdate";
+import updateProfile from "./ProfileContext";
 
 function ProfileForm({ onProfileUpdate }) {
   const { user, token, setUser } = useContext(AuthContext);
-  const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMG_UR;
+  const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMG_URL;
   const [profileImage, setProfileImage] = useState(null);
   const [bio, setBio] = useState("");
   const [profileImagePreview, setProfileImagePreview] =
@@ -17,6 +17,7 @@ function ProfileForm({ onProfileUpdate }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      console.log("Selected image file:", file);
       setProfileImage(file);
       setProfileImagePreview(URL.createObjectURL(file));
     }
@@ -24,6 +25,7 @@ function ProfileForm({ onProfileUpdate }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting profile form with data:", formData);
     const formData = new FormData();
     formData.append("bio", bio);
     if (profileImage) {
