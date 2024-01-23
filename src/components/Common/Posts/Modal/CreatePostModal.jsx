@@ -39,6 +39,9 @@ function CreatePostModal({ show, handleClose }) {
 
     const formData = new FormData();
     console.log('Form Data:', formData);
+    for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
     formData.append("title", title);
 
     formData.append(
@@ -51,7 +54,9 @@ function CreatePostModal({ show, handleClose }) {
       formData.append("post_image", image);
     }
     formData.append("time", time);
-    
+    console.log('ImageInstance', ImageInstance);
+    console.log('ImageInstance.post', ImageInstance.post);
+
 
     try {
       const response = await ImageInstance.post("/posts/", formData, {});
