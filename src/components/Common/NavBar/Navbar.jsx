@@ -2,8 +2,6 @@ import React, { Suspense, useState, useContext } from "react";
 
 import { Button, Container, Navbar, Nav, Offcanvas } from "react-bootstrap";
 
-import { NavLink } from "react-router-dom";
-
 import { useAuth } from "../../Authentication/AuthContext";
 import AuthenticationModal from "../../Authentication/Modal/AuthenticationModal";
 
@@ -86,15 +84,11 @@ function Navigation() {
                     Liked
                   </Nav.Link>
 
-                  <Nav.Link
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowCreatePostModal(true);
-                    }}
-                  >
+                  <Nav.Link onClick={() => setShowCreatePostModal(true)}>
                     <FontAwesomeIcon icon={faPlusSquare} className="me-1" />
                     Add Post
                   </Nav.Link>
+
                   <Nav.Link to="/profile">
                     <FontAwesomeIcon icon={faUserCircle} className="me-1" />
                     Profile
@@ -126,6 +120,9 @@ function Navigation() {
             show={showAuthModal}
             handleClose={() => setShowAuthModal(false)}
           />
+        )}
+        {showCreatePostModal && (
+         <CreatePostModal show={showCreatePostModal} handleClose={() => setShowCreatePostModal(false)} />
         )}
       </Suspense>
     </Navbar>
