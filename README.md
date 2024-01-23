@@ -40,18 +40,21 @@ The focus is on essential features such as viewing posts, managing personal cont
 
 Mockups using https://webflow.com
 
-<img src="" alt="mockup" width="320">
+<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20174638.png?raw=true" alt="mockup" width="320">
+<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20174830.png?raw=true" alt="mockup" width="320">
+<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20175257.png?raw=true" alt="mockup" width="320">
+
 
 
 Prebuild using https://codepen.io 
 
-<img src="" alt="registration" width="320">
+<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20131118.png?raw=true" alt="registration" width="340">
 
 
 
 Color palette using https://coolors.co/
 
-<img src="" alt="color palette" width="320">
+<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20182243.png?raw=true" alt="color palette" width="350">
 
 [Back to top](#table-of-contents)
 
