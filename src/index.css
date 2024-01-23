@@ -1,0 +1,213 @@
+ /* Css structure
+   1. Root variables, Typography
+   2. Reset styles
+   3. Base styles
+   4. Main layout
+   5. Navigation
+   6. Components (Buttons, Cards, Modals)
+   7. Responsive (@Media Queries)
+*/
+
+  /* 1. Root Variables and Typography */
+  :root {
+    --main-bg-color: #2D3250;
+    --main-text-bg-color: #5a5a5a;
+    --footer-text-color: #FFFFFF;
+    --reg-header-text-color: #d67d0e;
+    --search-bar-bg-color-mobile: #DDDDDD;
+    --nav-link: #F6C500;
+    --nav-link-hover: #FBAC82;
+    --navbrand-color: #d67d0e;
+    --navbar-toggle-icon-color: #ffcc99;
+    --button-bg-color: #F9EBCD;
+    --button-bg-color-hover: #F78C56;
+    --footer-bg-color: #643A99;
+
+
+    /* Typography */
+    --font-xl: clamp(3rem, 1rem + 10vw, 6rem);
+    --font-large: 2rem;
+    --font-medium: 1.5rem;
+    --font-regular: 1.125rem;
+}
+
+/* 1.1 Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Kalnia', serif;
+    color: var(--nav-link);
+}
+
+p {
+    font-family: 'Afacad', sans-serif;
+}
+
+strong {
+    color: var(--navbrand-color);
+    font-size: var(--font-medium);
+    font-weight: 600;
+    font-family: 'Kalnia', serif;
+}
+
+/* 2. Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+th {
+    text-align: inherit;
+}
+
+/* 3. Base Styles */
+html {
+    height: 100%; 
+}
+
+body, html {
+    height: 100vh;    
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Afacad', sans-serif;
+    font-size: var(--font-regular);
+    line-height: 1.6;
+    background-color: var(--main-bg-color);
+    color: var(--main-text-bg-color);
+}
+
+body {
+    display: flex;
+    flex-direction: column; 
+}
+
+/* 4. Main Layout */
+header {
+    background-color: var(--main-bg-color);    
+}
+
+
+
+
+main {
+    justify-content: center;
+    flex: 1;
+    height: 80vh;
+}
+
+.footer {
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text);
+}
+.footer-sub-text {
+    color:#FFFFFF;
+}
+    
+/* 5. Navigation */
+.navbar {
+    background-color: var(--main-bg-color)!important;     
+    font-size: var(--font-regular);
+    font-weight: 500;
+}
+
+.nav-link {
+    color: var(--nav-link)!important;
+    position: relative; 
+    display: inline-block; 
+    padding-bottom: 2px;
+    transition: color 200ms ease-in-out; 
+}
+
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%; 
+    height: 0.5px;
+    background: var(--nav-link-hover); 
+    transition: width 200ms ease-in-out; 
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--nav-link-hover)!important; 
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after {
+    width: 100%; 
+}
+
+
+.nav-link:hover::after,
+.nav-link:focus::after {
+    width: 100%; 
+}
+
+.accounts-link {
+    margin-left: 20px;
+}
+.search-container {
+    position: relative;
+}
+
+.search-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent!important;
+    color: var(--nav-link);
+ 
+}
+
+.search-button:hover {
+    color: var(--nav-link-hover)!important;
+}
+
+.search-container .form-control {
+    height: 35px; 
+    padding-right: 40px; 
+}
+
+/* 6. Components */
+
+ /* Registration header */
+.reg-header {
+  font-weight: 600;
+  color: var(--reg-header-text-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--button-bg-color);
+    color: var(--main-bg-color);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--button-bg-color-hover);
+    color: white;
+}
+
+
+.searchbar-container {
+    max-width: 600px; 
+    margin: auto; 
+    padding: 10px; 
+}
+
+
+@media (max-width: 768px) {
+    .searchbar-container {
+        max-width: 100%; 
+        padding: 5px;
+    }
+}

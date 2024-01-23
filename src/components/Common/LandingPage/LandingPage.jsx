@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import AuthenticationModal from '../../Authentication/Modal/AuthenticationModal'; 
+import Searchbar from '../Searchbar/Searchbar';
+import PostList from '../Posts/PostList';
+import Postcard from '../Posts/Cards/Cards'
+import { PostsProvider } from '../Posts/PostContext';
+import Navigation from '../NavBar/Navbar';
 
 const LandingPage = () => {
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
-  const handleAuthModalClose = () => setShowAuthModal(false);
-  const handleAuthModalShow = () => setShowAuthModal(true);
+  
+  
 
   return (
-    <div className="landing-page">
-      <h2>LandingPage</h2>
-      <Button onClick={handleAuthModalShow}>Login/Register</Button>
-      {showAuthModal && (
-        <AuthenticationModal
-          show={showAuthModal}
-          handleClose={handleAuthModalClose}
-        />
-      )}
-    </div>
+    <PostsProvider>
+      <div className="landing-page">
+        <Navigation />
+        <h1>LandingPage</h1>                
+        <Searchbar />
+        <PostList />
+        <Postcard />
+      </div>
+    </PostsProvider>
   );
 };
 
 export default LandingPage;
+
