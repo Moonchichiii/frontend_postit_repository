@@ -48,7 +48,7 @@ Mockups using https://webflow.com
 
 Prebuild using https://codepen.io 
 
-<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20131118.png?raw=true" alt="registration" width="220">
+<img src="https://github.com/Moonchichiii/frontend_postit_repository/blob/main/ReadMeContent/Images/Screenshot%202024-01-05%20131118.png?raw=true" alt="registration" width="320">
 
 
 
