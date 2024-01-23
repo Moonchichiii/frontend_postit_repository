@@ -20,9 +20,11 @@ export const AuthProvider = ({ children }) => {
       console.log("Login response data:", response.data);
   
       if (response.data.access && response.data.user_id) {
-
-        setUser({ ...user, id: response.data.user_id });
-        setToken(response.data.access);
+        setUser({ 
+          id: response.data.user_id, 
+          profile: response.data.profile_id  
+        });
+        setToken(response.data.access);        
       } else {
         console.error("Login error: Data is incomplete."); 
         setErrors({ login: "Login failed. Please try again." });
