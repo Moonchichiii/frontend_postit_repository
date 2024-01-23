@@ -33,7 +33,7 @@ const PostList = ({ searchTerm }) => {
             dataLength={posts.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
+            loader={<h4 className='text-center'>Loading...</h4>}
         >
             {posts.map(post => (
                 <Postcard key={post.id} post={post} />

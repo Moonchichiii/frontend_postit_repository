@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 
 function Postcard({ post }) {
   if (!post) {
-    return <div className="text-center">Loading...</div>;
+    return <div className="text-center"></div>;
   }
 
   return (

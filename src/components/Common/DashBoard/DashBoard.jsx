@@ -26,7 +26,7 @@ const Dashboard = () => {
           
           <Searchbar onSearch={setSearchTerm} />
           <PostList searchTerm={searchTerm} />
-          
+          <PostList />
           <Postcard />         
           
         </div>
