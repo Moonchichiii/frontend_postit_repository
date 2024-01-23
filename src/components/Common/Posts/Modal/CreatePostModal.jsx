@@ -38,9 +38,12 @@ function CreatePostModal({ show, handleClose }) {
     event.preventDefault();
 
     const formData = new FormData();
+    console.log('Form Data:', formData);
     formData.append("title", title);
 
     formData.append(
+   
+
       "content",
       `Ingredients:\n${ingredients}\n\nRecipe:\n${recipe}`
     );
@@ -48,12 +51,19 @@ function CreatePostModal({ show, handleClose }) {
       formData.append("post_image", image);
     }
     formData.append("time", time);
+    
 
     try {
       const response = await ImageInstance.post("/posts/", formData, {});
+
+      console.log('Image Instance:', ImageInstance);
+
+
       console.log("Sucessfully created post:", response.data);
       handleClose();
     } catch (error) {
+      console.log('Something went wrong creating post:', error.message, error);
+
       console.log("Something went wrong creating post:", error);
     }
   };

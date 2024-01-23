@@ -9,9 +9,14 @@ const axiosInstance = axios.create({
 });
 
 export const ImageInstance = {
+ 
   headers: {
     'Content-Type': 'multipart/form-data',
   },
+  
 };
+console.log('Axios instance methods:', ImageInstance);
+
+
 
 export default axiosInstance;

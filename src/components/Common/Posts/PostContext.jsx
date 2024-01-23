@@ -1,6 +1,17 @@
 import React, { createContext, useContext, useState } from "react";
 import ImageInstance from "../../../Api/AxiosDefaults";
 
+
+
+
+
+
+
+
+
+
+//  Fetching posts from the api and storing them in state. 
+
 export const fetchPosts = async (searchQuery = "", page = 1) => {
   try {
     const response = await ImageInstance.get(
@@ -13,6 +24,8 @@ export const fetchPosts = async (searchQuery = "", page = 1) => {
   }
 };
 
+
+//  creating a context for the posts 
 export const PostsContext = createContext();
 
 export const usePosts = () => useContext(PostsContext);
@@ -21,6 +34,7 @@ export const PostsProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  
   return (
     <PostsContext.Provider
       value={{ posts, setPosts, searchTerm, setSearchTerm }}
@@ -29,3 +43,6 @@ export const PostsProvider = ({ children }) => {
     </PostsContext.Provider>
   );
 };
+
+
+

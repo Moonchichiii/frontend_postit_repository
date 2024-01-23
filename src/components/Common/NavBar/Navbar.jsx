@@ -74,11 +74,6 @@ function Navigation() {
 
               {token && (
                 <>
-                  <Nav.Link to="/feed">
-                    <FontAwesomeIcon icon={faList} className="me-1" />
-                    Feed
-                  </Nav.Link>
-
                   <Nav.Link to="/liked">
                     <FontAwesomeIcon icon={faHeart} className="me-1" />
                     Liked
