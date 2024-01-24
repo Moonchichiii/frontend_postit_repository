@@ -5,7 +5,7 @@ import { Button, Container, Navbar, Nav, Offcanvas } from "react-bootstrap";
 import { useAuth } from "../../Authentication/AuthContext";
 import AuthenticationModal from "../../Authentication/Modal/AuthenticationModal";
 
-import CreatePostModal from "../Posts/Modal/CreatePostModal";
+import CreatePostModal from "../Posts/CreatePostModal/CreatePostModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -77,6 +77,14 @@ function Navigation() {
                   <Nav.Link to="/liked">
                     <FontAwesomeIcon icon={faHeart} className="me-1" />
                     Liked
+                  </Nav.Link>
+                               
+
+
+                  <Nav.Link >
+                    {/* onClick={() => setShowEditPostModal(true)} */}
+                    <FontAwesomeIcon icon={faList} className="me-1" />                    
+                    Edit Posts
                   </Nav.Link>
 
                   <Nav.Link onClick={() => setShowCreatePostModal(true)}>

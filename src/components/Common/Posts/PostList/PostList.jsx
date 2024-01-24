@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchPosts } from './PostContext';
-import Postcard from './Cards/Cards';
+import { fetchPosts } from '../PostContext/PostContext';
+import Postcard from '../Cards/Cards';
 
 
 const PostList = ({ searchTerm }) => {
@@ -33,7 +33,7 @@ const PostList = ({ searchTerm }) => {
             dataLength={posts.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<h4 className='text-center'>Loading...</h4>}
+            loader={<h4 className='text-center m-2'>Loading...</h4>}
         >
             {posts.map(post => (
                 <Postcard key={post.id} post={post} />

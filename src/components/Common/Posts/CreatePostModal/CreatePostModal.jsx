@@ -12,9 +12,7 @@ function CreatePostModal({ show, handleClose }) {
     time: ""
   });
 
-
-
-// preset cooking time options
+  // preset cooking time options
 
   const [selectedTime, setSelectedTime] = useState(10);
   const cookingTimeOptions = [
@@ -36,9 +34,6 @@ function CreatePostModal({ show, handleClose }) {
 
   const [imagePreview, setImagePreview] = useState(null);
 
-
-
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setPostData({
@@ -47,14 +42,14 @@ function CreatePostModal({ show, handleClose }) {
     });
   };
 
-// changes the time for the recipe
+  // changes the time for the recipe
 
   const handleChangeTime = (event) => {
     const selectedValue = parseInt(event.target.value);
     setSelectedTime(selectedValue);
   };
 
-// changes the image for preview
+  // changes the image for preview
 
   const handleChangeImage = (event) => {
     if (event.target.files.length) {
@@ -78,9 +73,13 @@ function CreatePostModal({ show, handleClose }) {
       "content",
       `Ingredients:\n${ingredients}\n\nRecipe:\n${recipe}`
     );
+
+    
     if (user && user.profile) {
+      formData.append("user", user.id);
       formData.append("profile", user.profile);
     }
+
     if (image) {
       formData.append("post_image", image);
     }
@@ -100,6 +99,7 @@ function CreatePostModal({ show, handleClose }) {
         axiosConfig
       );
       console.log("Successfully created post:", response.data);
+
       handleClose();
     } catch (error) {
       console.log("Something went wrong creating post:", error.message, error);

@@ -84,6 +84,7 @@ body, html {
 body {
     display: flex;
     flex-direction: column; 
+    
 }
 
 /* 4. Main Layout */
@@ -91,10 +92,8 @@ header {
     background-color: var(--main-bg-color);    
 }
 
-
-
-
 main {
+    align-items: center;
     justify-content: center;
     flex: 1;
     height: 80vh;
@@ -152,29 +151,6 @@ main {
 
 .accounts-link {
     margin-left: 20px;
-}
-.search-container {
-    position: relative;
-}
-
-.search-button {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    border: none;
-    background: transparent!important;
-    color: var(--nav-link);
- 
-}
-
-.search-button:hover {
-    color: var(--nav-link-hover)!important;
-}
-
-.search-container .form-control {
-    height: 35px; 
-    padding-right: 40px; 
 }
 
 /* 6. Components */

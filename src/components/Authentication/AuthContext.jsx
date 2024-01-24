@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
 import axiosInstance from "../../Api/AxiosDefaults";
 
-
 export const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -11,27 +10,31 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [errors, setErrors] = useState({});
   const [Registered, setRegistered] = useState(false);
-
+  
 
   // functions for user authentication
   const signIn = async (username, password) => {
     try {
-      const response = await axiosInstance.post("/users/token/", { username, password });
+      const response = await axiosInstance.post("/users/token/", {
+        username,
+        password
+      });
       console.log("Login response data:", response.data);
-  
+
       if (response.data.access && response.data.user_id) {
-        setUser({ 
-          id: response.data.user_id, 
-          profile: response.data.profile_id  
+        setUser({
+          id: response.data.user_id,
+          profile: response.data.profile_id
         });
-        setToken(response.data.access);        
+        setToken(response.data.access);
+        setIsSuperuser(response.data.is_superuser === true);
       } else {
-        console.error("Login error: Data is incomplete."); 
+        console.error("Login error: Data is incomplete.");
         setErrors({ login: "Login failed. Please try again." });
       }
     } catch (error) {
       const errorData = error.response?.data;
-  
+
       if (errorData && errorData.errors && Array.isArray(errorData.errors)) {
         const detailedError = errorData.errors
           .map((err) => err.detail)
@@ -51,25 +54,22 @@ export const AuthProvider = ({ children }) => {
         password,
         confirm_password: confirmPassword
       });
-      
-      console.log("Sign Up Response:", response.data)
+
+      console.log("Sign Up Response:", response.data);
       if (response.data.user && response.data.user.id) {
-        
         setUser(response.data.user);
         console.log("API response:", response.data);
         setToken(response.data.access);
         console.log("seTtoken:", response.data.access);
 
-
+        setIsSuperuser(response.data.is_superuser === true);
         setRegistered(true);
-        
       } else {
-        
         console.error("Registration data is incomplete. No user ID present.");
         setErrors({ register: "Registration failed. Please try again." });
-        return false; 
+        return false;
       }
-  
+
       setErrors({});
       return true;
     } catch (error) {
@@ -96,13 +96,15 @@ export const AuthProvider = ({ children }) => {
       setUser,
       token,
       setToken,
-      signIn,      
+      signIn,
       logOut,
       signUp,
-      Registered, 
+      Registered,
       setRegistered,
       errors,
       setErrors,
+      
+      
     }),
     [user, token, errors]
   );
@@ -110,4 +112,4 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};       
+};
