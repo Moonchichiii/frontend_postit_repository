@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { Modal, Form, Button, FormControl } from "react-bootstrap";
-import { axiosFormInstance } from "../../../../Api/AxiosDefaults";
+import React, { useState, useContext } from "react";
+import { Modal, Form, Button, FormControl, Alert } from "react-bootstrap";
+import { PostsContext } from "../PostContext/PostContext";
 import { useAuth } from "../../../Authentication/AuthContext";
 
 function CreatePostModal({ show, handleClose }) {
+  const { user, token } = useAuth();
+  const { addPost } = useContext(PostsContext);
+
   const [postData, setPostData] = useState({
     title: "",
     ingredients: "",
@@ -11,8 +14,8 @@ function CreatePostModal({ show, handleClose }) {
     image: null,
     time: ""
   });
-
-  // preset cooking time options
+ // preset cooking time options
+  const { title, ingredients, recipe, image, time } = postData;
 
   const [selectedTime, setSelectedTime] = useState(10);
   const cookingTimeOptions = [
@@ -30,42 +33,32 @@ function CreatePostModal({ show, handleClose }) {
     { label: "4 hour or more", value: 270 }
   ];
 
-  const { title, ingredients, recipe, image, time } = postData;
-
-  const [imagePreview, setImagePreview] = useState(null);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setPostData({
-      ...postData,
-      [name]: value
-    });
-  };
-
   // changes the time for the recipe
-
   const handleChangeTime = (event) => {
     const selectedValue = parseInt(event.target.value);
     setSelectedTime(selectedValue);
   };
+  const [imagePreview, setImagePreview] = useState(null);
 
   // changes the image for preview
-
   const handleChangeImage = (event) => {
     if (event.target.files.length) {
       const file = event.target.files[0];
-      setPostData({
-        ...postData,
-        image: file
-      });
+      setPostData({ ...postData, image: file });
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const { user, token } = useAuth();
+  const [error, setError] = useState("");
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setPostData({ ...postData, [name]: value });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
 
     const formData = new FormData();
     formData.append("title", title);
@@ -73,36 +66,19 @@ function CreatePostModal({ show, handleClose }) {
       "content",
       `Ingredients:\n${ingredients}\n\nRecipe:\n${recipe}`
     );
+    if (image) formData.append("post_image", image);
+    formData.append("time", selectedTime);
 
-    
     if (user && user.profile) {
       formData.append("user", user.id);
       formData.append("profile", user.profile);
     }
 
-    if (image) {
-      formData.append("post_image", image);
-    }
-    formData.append("time", selectedTime);
-
-    // adds token to header
-    const axiosConfig = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-
     try {
-      const response = await axiosFormInstance.post(
-        "/posts/",
-        formData,
-        axiosConfig
-      );
-      console.log("Successfully created post:", response.data);
-
+      await addPost(formData);
       handleClose();
-    } catch (error) {
-      console.log("Something went wrong creating post:", error.message, error);
+    } catch (e) {
+      setError(e.response?.data?.message || "Error arrised! while posting!");
     }
   };
 
@@ -189,6 +165,7 @@ function CreatePostModal({ show, handleClose }) {
             <Button variant="primary" type="submit">
               Post it!
             </Button>
+            {error && <Alert variant="danger">{error}</Alert>}
           </div>
         </Form>
       </Modal.Body>

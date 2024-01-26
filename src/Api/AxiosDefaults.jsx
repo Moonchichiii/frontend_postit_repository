@@ -22,6 +22,10 @@ export const axiosPublicInstance = axios.create({
 // axios instance for multipart/form-data requests
 export const axiosFormInstance = axios.create({
   baseURL: import.meta.env.VITE_AUTH_URL,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+  
   withCredentials: true,
 });
 

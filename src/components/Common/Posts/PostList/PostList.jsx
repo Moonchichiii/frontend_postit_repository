@@ -1,45 +1,35 @@
+import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-import React, { useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchPosts } from '../PostContext/PostContext';
-import Postcard from '../Cards/Cards';
+import Postcard from "../PostCard/PostCards";
+import { useContext, useEffect } from "react";
+import { PostListContext } from "../PostList/PostListContext";
+import { Row, Col } from 'react-bootstrap';
 
-
-const PostList = ({ searchTerm }) => {
-    const [posts, setPosts] = useState([]);
-    const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(1);
-
-    const fetchMoreData = async () => {
-        const response = await fetchPosts(searchTerm, page);
-        console.log("Fetched posts:", response);
-        const newPosts = response.results; 
-    
-        if (newPosts.length === 0) {
-            setHasMore(false);
-            return;
-        }
-        setPosts([...posts, ...newPosts]);
-        setPage(page + 1);
-    };
+const PostList = () => {
+  const { posts, hasMore, setPage } = useContext(PostListContext);
 
 
-    useEffect(() => {
-        fetchMoreData();
-    }, [searchTerm]);
+  useEffect(() => {
+    console.log('Post IDs:', posts.map(post => post.id));
+  }, [posts]);
 
-    return (
-        <InfiniteScroll
-            dataLength={posts.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={<h4 className='text-center m-2'>Loading...</h4>}
-        >
-            {posts.map(post => (
-                <Postcard key={post.id} post={post} />
-            ))}
-        </InfiniteScroll>
-    );
+  return (
+    <InfiniteScroll
+      dataLength={posts.length}
+      next={() => setPage(prevPage => prevPage + 1)}
+      hasMore={hasMore}
+      loader={<h4 className="text-center m-2">Loading...</h4>}
+    >
+      <Row>
+        {posts.map((post, index) => (
+
+          <Col key={post.id || index} xs={12} md={6} lg={4} className="mb-4">
+            <Postcard post={post} />
+          </Col>
+        ))}
+      </Row>
+    </InfiniteScroll>
+  );
 };
-
 export default PostList;

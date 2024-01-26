@@ -5,6 +5,9 @@ export const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+
+// State to manage user info, authentication token, and error messages
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -12,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [Registered, setRegistered] = useState(false);
   
 
-  // functions for user authentication
+  // functions for user authentication SignIn, SignUp and LogOut!
   const signIn = async (username, password) => {
     try {
       const response = await axiosInstance.post("/users/token/", {
@@ -60,7 +63,7 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
         console.log("API response:", response.data);
         setToken(response.data.access);
-        console.log("seTtoken:", response.data.access);
+        console.log("setToken:", response.data.access);
 
         setIsSuperuser(response.data.is_superuser === true);
         setRegistered(true);

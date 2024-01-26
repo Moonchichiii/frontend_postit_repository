@@ -7,7 +7,7 @@ import AuthenticationModal from "../../Authentication/Modal/AuthenticationModal"
 
 import CreatePostModal from "../Posts/CreatePostModal/CreatePostModal";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@font-awesome/react-fontawesome";
 import {
   faHome,
   faList,
@@ -15,7 +15,9 @@ import {
   faPlusSquare,
   faUserCircle,
   faSignOutAlt
-} from "@fortawesome/free-solid-svg-icons";
+} from "@font-awesome/free-solid-svg-icons";
+
+
 
 function Navigation() {
   const { token, logOut } = useAuth();
@@ -79,13 +81,7 @@ function Navigation() {
                     Liked
                   </Nav.Link>
                                
-
-
-                  <Nav.Link >
-                    {/* onClick={() => setShowEditPostModal(true)} */}
-                    <FontAwesomeIcon icon={faList} className="me-1" />                    
-                    Edit Posts
-                  </Nav.Link>
+           
 
                   <Nav.Link onClick={() => setShowCreatePostModal(true)}>
                     <FontAwesomeIcon icon={faPlusSquare} className="me-1" />
