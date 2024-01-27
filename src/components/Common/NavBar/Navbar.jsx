@@ -8,16 +8,13 @@ import AuthenticationModal from "../../Authentication/Modal/AuthenticationModal"
 import CreatePostModal from "../Posts/CreatePostModal/CreatePostModal";
 
 import ProfileManagerModal from "../Profile/ProfileManagerModal";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons/faHome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons/faHeart";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons/faPlusSquare";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons/faUserCircle";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 
-import {
-  faHome,
-  faHeart,
-  faPlusSquare,
-  faUserCircle,
-  faSignOutAlt
-} from "@fortawesome/free-solid-svg-icons";
 
 function Navigation() {
   const { token, logOut } = useAuth();
