@@ -10,6 +10,7 @@ import CreatePostModal from "../Posts/CreatePostModal/CreatePostModal";
 import ProfileManagerModal from "../Profile/ProfileManagerModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   faHome,
   faHeart,
