@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import React, { useState } from "react";
+import { Form, Button, Alert } from "react-bootstrap";
 
 function CommentForm({ onCommentSubmit }) {
-  const [comment, setComment] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [comment, setComment] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (comment.length > 200) { 
-      setErrorMessage('Comment too long. 200 chars max.');
+    if (comment.length > 200) {
+      setErrorMessage("Comment too long. 200 chars max.");
       return;
     }
-    
-    onCommentSubmit({ content: comment });
-    setComment('');
-    setErrorMessage('');
+
+    onCommentSubmit(comment);
+    setComment("");
+    setErrorMessage("");
   };
 
   return (

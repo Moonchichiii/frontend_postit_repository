@@ -52,8 +52,31 @@ export const PostsProvider = ({ children }) => {
     }
   };
 
+  //  like posts function
+
+  const addLike = async (postId) => {
+    try {
+      const response = await axiosFormInstance.post(
+        "/likes/",
+        { post: postId, user: userId },
+        axiosConfig
+      );
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? { ...post, is_liked: true, likes_count: post.likes_count + 1 }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("liking post error : ", error);
+    }
+  };
+
   return (
-    <PostsContext.Provider value={{ posts, addPost, editPost, removePost }}>
+    <PostsContext.Provider
+      value={{ posts, addPost, editPost, removePost, addLike }}
+    >
       {children}
     </PostsContext.Provider>
   );

@@ -10,6 +10,11 @@ function Searchbar() {
     setSearchTerm(e.target.elements.search.value);
     console.log(searchTerm);
   };
+  const handleInputChange = (event) => {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm); 
+  };
+
 
   return (
     <div className="searchbar-container">

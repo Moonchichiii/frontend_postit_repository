@@ -7,17 +7,16 @@ import AuthenticationModal from "../../Authentication/Modal/AuthenticationModal"
 
 import CreatePostModal from "../Posts/CreatePostModal/CreatePostModal";
 
-import { FontAwesomeIcon } from "@font-awesome/react-fontawesome";
+import ProfileManagerModal from "../Profile/ProfileManagerModal";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
-  faList,
   faHeart,
   faPlusSquare,
   faUserCircle,
   faSignOutAlt
-} from "@font-awesome/free-solid-svg-icons";
-
-
+} from "@fortawesome/free-solid-svg-icons";
 
 function Navigation() {
   const { token, logOut } = useAuth();
@@ -25,6 +24,8 @@ function Navigation() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+
+  const [showProfileManagerModal, setShowProfileManagerModal] = useState(false);
 
   // No show OffCanvas
 
@@ -40,7 +41,7 @@ function Navigation() {
   };
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary mb-3">
+    <Navbar expand="lg" className="bg-body-tertiary mb-3 sticky-top">
       <Container fluid>
         <Navbar.Brand className="navbar-brand" href="/">
           <strong>Recipe Repository</strong>
@@ -67,10 +68,6 @@ function Navigation() {
                     <FontAwesomeIcon icon={faHome} className="me-1" />
                     Home
                   </Nav.Link>
-
-                  <Nav.Link to="/about">About</Nav.Link>
-
-                  <Nav.Link to="/contact">Contact</Nav.Link>
                 </>
               )}
 
@@ -80,15 +77,13 @@ function Navigation() {
                     <FontAwesomeIcon icon={faHeart} className="me-1" />
                     Liked
                   </Nav.Link>
-                               
-           
 
                   <Nav.Link onClick={() => setShowCreatePostModal(true)}>
                     <FontAwesomeIcon icon={faPlusSquare} className="me-1" />
                     Add Post
                   </Nav.Link>
 
-                  <Nav.Link to="/profile">
+                  <Nav.Link onClick={() => setShowProfileManagerModal(true)}>
                     <FontAwesomeIcon icon={faUserCircle} className="me-1" />
                     Profile
                   </Nav.Link>
@@ -121,7 +116,16 @@ function Navigation() {
           />
         )}
         {showCreatePostModal && (
-         <CreatePostModal show={showCreatePostModal} handleClose={() => setShowCreatePostModal(false)} />
+          <CreatePostModal
+            show={showCreatePostModal}
+            handleClose={() => setShowCreatePostModal(false)}
+          />
+        )}
+        {showProfileManagerModal && (
+          <ProfileManagerModal
+            show={showProfileManagerModal}
+            handleClose={() => setShowProfileManagerModal(false)}
+          />
         )}
       </Suspense>
     </Navbar>

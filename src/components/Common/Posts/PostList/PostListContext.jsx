@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { axiosPublicInstance } from "../../../../Api/AxiosDefaults";
+import { useSearch } from "../../Searchbar/SearchContext";
 
 export const PostListContext = createContext();
 
@@ -7,18 +8,25 @@ export const PostListProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const { searchTerm } = useSearch();
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const url = `/posts/?page=${page}`;
       try {
+        const url = `/posts/?page=${page}`;
         const response = await axiosPublicInstance.get(url);
-        console.log(response.data.results);
-        const newPosts = response.data.results;
-        setHasMore(newPosts.length > 0);
-        console.log(newPosts.length > 0);
-        setPosts(prev => page === 1 ? newPosts : [...prev, ...newPosts]);
-        console.log(posts);
+        let fetchedPosts = response.data.results;
+
+        if (searchTerm) {
+          fetchedPosts = fetchedPosts.filter((post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
+
+        setHasMore(fetchedPosts.length > 0);
+        setPosts((prev) =>
+          page === 1 ? fetchedPosts : [...prev, ...fetchedPosts]
+        );
       } catch (error) {
         console.error("Error fetching posts:", error);
         setHasMore(false);
@@ -26,11 +34,9 @@ export const PostListProvider = ({ children }) => {
     };
 
     fetchPosts();
-  }, [page]);
-
- 
+  }, [page, searchTerm]);
   return (
-    <PostListContext.Provider value={{ posts, setPosts, hasMore, setPage }}>      
+    <PostListContext.Provider value={{ posts, setPosts, hasMore, setPage }}>
       {children}
     </PostListContext.Provider>
   );
