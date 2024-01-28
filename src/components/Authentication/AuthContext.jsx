@@ -5,24 +5,17 @@ export const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-
-// State to manage user info, authentication token, and error messages
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [errors, setErrors] = useState({});
-  const [Registered, setRegistered] = useState(false);
-  
 
-  // functions for user authentication SignIn, SignUp and LogOut!
   const signIn = async (username, password) => {
     try {
-      const response = await axiosInstance.post("/users/token/", {
+      const response = await axiosInstance.post("/users/login/", {
         username,
         password
       });
-      console.log("Login response data:", response.data);
 
       if (response.data.access && response.data.user_id) {
         setUser({
@@ -30,58 +23,42 @@ export const AuthProvider = ({ children }) => {
           profile: response.data.profile_id
         });
         setToken(response.data.access);
-        setIsSuperuser(response.data.is_superuser === true);
+        setErrors({});
       } else {
-        console.error("Login error: Data is incomplete.");
-        setErrors({ login: "Login failed. Please try again." });
+        setErrors({ login: ["Login failed. Please try again."] });
       }
     } catch (error) {
-      const errorData = error.response?.data;
-
-      if (errorData && errorData.errors && Array.isArray(errorData.errors)) {
-        const detailedError = errorData.errors
-          .map((err) => err.detail)
-          .join(", ");
-        setErrors({ login: detailedError });
-      } else {
-        setErrors({ login: "Network error or server is not responding." });
-      }
+      setErrors({
+        login: error.response?.data?.errors?.map((err) => err.detail) || [
+          "Network error or server is not responding."
+        ]
+      });
     }
   };
 
-  const signUp = async (username, email, password, confirmPassword) => {
+  const signUp = async (username, email, password) => {
     try {
       const response = await axiosInstance.post("/users/register/", {
         username,
         email,
-        password,
-        confirm_password: confirmPassword
+        password
       });
-
-      console.log("Sign Up Response:", response.data);
-      if (response.data.user && response.data.user.id) {
-        setUser(response.data.user);
-        console.log("API response:", response.data);
+      if (response.data && response.data.access) {
         setToken(response.data.access);
-        console.log("setToken:", response.data.access);
-
-        setIsSuperuser(response.data.is_superuser === true);
-        setRegistered(true);
-      } else {
-        console.error("Registration data is incomplete. No user ID present.");
-        setErrors({ register: "Registration failed. Please try again." });
-        return false;
+        setUser({
+          id: response.data.id,
+          username: response.data.username,
+          email: response.data.email,
+          profile_id: response.data.profile_id
+        });
+        setErrors({});
+        return true;
       }
-
-      setErrors({});
-      return true;
     } catch (error) {
-      console.error("Sign Up Error:", error.response?.data || error);
-      console.error("Registration error:", error.response?.data);
       setErrors({
-        register:
-          error.response?.data.errors ||
-          "Network error or server is not responding."
+        register: error.response?.data?.errors || [
+          "An unexpected error occurred."
+        ]
       });
       return false;
     }
@@ -102,12 +79,8 @@ export const AuthProvider = ({ children }) => {
       signIn,
       logOut,
       signUp,
-      Registered,
-      setRegistered,
       errors,
-      setErrors,
-      
-      
+      setErrors
     }),
     [user, token, errors]
   );

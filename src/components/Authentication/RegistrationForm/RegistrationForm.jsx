@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../AuthContext";
 import { Alert, Button } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = () => {
   const [userData, setUserData] = useState({
@@ -11,9 +11,8 @@ const RegistrationForm = () => {
     confirmPassword: ""
   });
 
-  const { signUp, errors, setErrors, token } = useAuth();
-  const navigate = useNavigate(); 
-
+  const { signUp, errors, setErrors } = useAuth();
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({ ...prevData, [name]: value }));
@@ -25,24 +24,11 @@ const RegistrationForm = () => {
       setErrors({ ...errors, confirmPassword: ["Passwords do not match!"] });
       return;
     }
+    const { username, email, password } = userData;
+    await signUp(username, email, password);
+      };
 
-    const success = await signUp(
-      userData.username,
-      userData.email,
-      userData.password,
-      userData.confirmPassword
-    );
-    if (success) {
-      navigate("/dashboard");
-    }
-  };
-
-  useEffect(() => {
-    if (token) {
-      navigate("/dashboard");
-    }
-  }, [token, navigate]);
-
+     
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
@@ -128,14 +114,10 @@ const RegistrationForm = () => {
           ))}
       </div>
 
-      {errors.register?.non_field_errors && (
-        <Alert variant="danger">{errors.register.non_field_errors}</Alert>
-      )}
-      
-        <Button variant="primary" type="submit">
-          Register
-        </Button>
-      
+   
+      <Button variant="primary" type="submit">
+        Register
+      </Button>
     </form>
   );
 };

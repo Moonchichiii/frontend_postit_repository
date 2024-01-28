@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy, useContext } from "react";
+import React, { useState, Suspense, lazy, useContext,useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import { AuthContext } from "../AuthContext";
 
@@ -11,9 +11,18 @@ function AuthenticationModal({ show, handleClose }) {
   const { token } = useContext(AuthContext);
   const [activeForm, setActiveForm] = useState("login");
 
+
   const toggleForm = () => {
     setActiveForm((prevForm) => (prevForm === "login" ? "register" : "login"));
   };
+
+  useEffect(() => {
+    console.log("Token in modal useEffect:", token);
+    if (token) {
+      handleClose();
+    }
+  }, [token, handleClose]);
+
 
   return (
     <Modal
