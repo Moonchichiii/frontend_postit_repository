@@ -1,20 +1,50 @@
-import React, { createContext, useContext, useState } from "react";
-import { axiosFormInstance } from "../../../../Api/AxiosDefaults";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { axiosFormInstance, axiosPublicInstance } from "../../../../Api/AxiosDefaults";
 import { useAuth } from "../../../Authentication/AuthContext";
+
+
 
 export const PostsContext = createContext();
 
 export const usePosts = () => useContext(PostsContext);
 
 export const PostsProvider = ({ children }) => {
-  const { token } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { token } = useAuth();
 
-  //  Setting the token in the header of the axios instance, included in each function call.
+  // Fetch posts from the backend
+  useEffect(() => {
+    const fetchPosts = async () => {
+      let url = `/posts/?page=${page}`;
+      let filteredPosts = posts; 
+      if (searchTerm) {
+        url = `/posts/?q=${searchTerm}&page=${page}`;
+        filteredPosts = posts.filter((post) =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+  
+      try {
+        const response = await axiosPublicInstance.get(url);
+        setPosts(response.data.results);
+        setHasMore(response.data.next != null);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        setHasMore(false);
+      }
+    };
+  
+    fetchPosts();
+  }, [page, searchTerm]);
+
+
+  // Axios requests with token
   const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
 
-  //  Functions for adding, editing, removing posts from the API. (Fetching posts is handled by PostListContext)
-
+  // add a new post
   const addPost = async (formData) => {
     try {
       const response = await axiosFormInstance.post(
@@ -52,9 +82,8 @@ export const PostsProvider = ({ children }) => {
     }
   };
 
-  //  like posts function
-
-  const addLike = async (postId) => {
+  // Like a post
+  const addLike = async (postId, userId) => {
     try {
       const response = await axiosFormInstance.post(
         "/likes/",
@@ -69,15 +98,29 @@ export const PostsProvider = ({ children }) => {
         )
       );
     } catch (error) {
-      console.error("liking post error : ", error);
+      console.error("liking post error:", error);
     }
   };
 
   return (
     <PostsContext.Provider
-      value={{ posts, addPost, editPost, removePost, addLike }}
+      value={{
+        posts,
+        setPosts,
+        page,
+        setPage,
+        hasMore,
+        searchTerm,
+        setSearchTerm,
+        addPost,
+        editPost,
+        removePost,
+        addLike
+      }}
     >
       {children}
     </PostsContext.Provider>
   );
 };
+
+export default PostsContext;

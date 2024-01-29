@@ -1,30 +1,31 @@
-import React from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-
+import React, { useContext, useEffect } from "react";
+import { PostsContext } from "../../Posts/PostContext/PostContext";
 import Postcard from "../PostCard/PostCards";
-import { useContext, useEffect } from "react";
-import { PostListContext } from "../PostList/PostListContext";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Row, Col } from "react-bootstrap";
 
-import { useSearch } from "../../Searchbar/SearchContext";
-
 const PostList = () => {
-  const { posts, hasMore, setPage } = useContext(PostListContext);
-  const { searchTerm } = useSearch();
+  const { posts, hasMore, setPage, searchTerm } = useContext(PostsContext);
 
   useEffect(() => {
     setPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, setPage]);
+
+  const filteredPosts = searchTerm
+    ? posts.filter(post =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : posts;
 
   return (
     <InfiniteScroll
-      dataLength={posts.length}
-      next={() => setPage((prevPage) => prevPage + 1)}
+      dataLength={filteredPosts.length}
+      next={() => setPage(prevPage => prevPage + 1)}
       hasMore={hasMore}
       loader={<h4 className="text-center m-2">Loading...</h4>}
     >
       <Row>
-        {posts.map((post, index) => (
+        {filteredPosts.map((post, index) => (
           <Col key={post.id || index} xs={12} md={6} lg={4} className="mb-4">
             <Postcard post={post} />
           </Col>
@@ -33,4 +34,5 @@ const PostList = () => {
     </InfiniteScroll>
   );
 };
+
 export default PostList;

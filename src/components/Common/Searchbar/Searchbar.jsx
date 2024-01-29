@@ -1,9 +1,11 @@
+import { useContext } from "react";
+import { PostsContext } from "../Posts/PostContext/PostContext"; 
 import { Form, Button, Alert } from "react-bootstrap";
-import { useSearch } from "./SearchContext";
+
+
 
 function Searchbar() {
-  const { searchTerm, setSearchTerm } = useSearch();
-  console.log(searchTerm, setSearchTerm);
+  const { searchTerm, setSearchTerm } = useContext(PostsContext);
 
   const handleSearch = (e) => {    
     e.preventDefault();
@@ -12,7 +14,7 @@ function Searchbar() {
   };
   const handleInputChange = (event) => {
     const newSearchTerm = event.target.value;
-    setSearchTerm(newSearchTerm); 
+    setSearchTerm(newSearchTerm);
   };
 
 

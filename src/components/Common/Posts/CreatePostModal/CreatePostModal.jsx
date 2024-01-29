@@ -83,6 +83,7 @@ function CreatePostModal({ show, handleClose }) {
   };
 
   return (
+    
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>Create a New Recipe Post</Modal.Title>
@@ -170,7 +171,10 @@ function CreatePostModal({ show, handleClose }) {
         </Form>
       </Modal.Body>
     </Modal>
-  );
+
+
+);
 }
 
+  
 export default CreatePostModal;

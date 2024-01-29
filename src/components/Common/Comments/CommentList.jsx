@@ -13,7 +13,7 @@ function CommentList({ comments, onDeleteComment }) {
         console.log("Comment data:", comment);
         return (
           <ListGroup.Item key={comment.id}>
-            {comment.profile_username} - {comment.content}
+          {post.id}  {post.id.comment.profile_username} - {comment.content}
             <br />
             <small>
               Comment : {new Date(comment.created_at).toLocaleString()}

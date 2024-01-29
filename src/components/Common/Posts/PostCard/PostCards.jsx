@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Button, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,36 +7,32 @@ import {
   faTrash,
   faCommentDots
 } from "@fortawesome/free-solid-svg-icons";
-
 import { useAuth } from "../../../Authentication/AuthContext";
 import { usePosts } from "../../Posts/PostContext/PostContext";
 
 import { CommentsProvider } from "../../Comments/CommentsContext";
 import CommentModal from "../../Comments/CommentModal";
+import EditPostModal from "../EditPostModal/EditPostModal";
 
 function Postcard({ post }) {
-  const { token } = useAuth();
+  const { user, token } = useAuth();
+  const { addLike, removePost } = usePosts();
+  const isOwner = user && post.user === user.id;
 
-  const { addLike } = usePosts();
-  const [likesCount, setLikesCount] = useState(post.likesCount);
-  const [isLiked, setIsLiked] = useState(post.isLiked);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
 
-  const handleLike = () => {
-    if (!isLiked) {
-      addLike(post.id);
-      setLikesCount(likesCount + 1);
-      setIsLiked(true);
-    }
-  };
+  const handleEdit = useCallback(() => setShowEditModal(true), []);
+  const handleDelete = useCallback(
+    async () => await removePost(post.id),
+    [post.id, removePost]
+  );
+  const handleLike = useCallback(
+    () => !post.isLiked && addLike(post.id),
+    [post.isLiked, post.id, addLike]
+  );
 
-  const [showModal, setShowModal] = useState(false);
-
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
-
-  if (!post) {
-    return <div className="text-center">Loading...</div>;
-  }
+  if (!post) return <div className="text-center">Loading...</div>;
 
   return (
     <Card className="h-100">
@@ -63,45 +59,50 @@ function Postcard({ post }) {
             )}
           </div>
         )}
-        <div className="mt-auto">
-          {token && (
-            <>
-              <Button variant="btn-sm outline-secondary" className="mb-2">
-                <FontAwesomeIcon icon={faEdit} /> Edit
-              </Button>
-              <Button variant="btn-sm outline-secondary" className="mb-2">
-                <FontAwesomeIcon icon={faTrash} /> Delete
-              </Button>
-              <Button
-                variant="btn-sm outline-secondary"
-                className="mb-2"
-                onClick={handleShow}
-              >
-                <FontAwesomeIcon icon={faCommentDots} /> View Comments
-              </Button>
-              <div className="mb-2">
-                {isLiked ? (
-                  <FontAwesomeIcon icon={faHeart} className="text-danger" />
-                ) : (
-                  <button onClick={handleLike}>
-                    <FontAwesomeIcon icon={faHeart} />
-                  </button>
-                )}
-                <span className="ml-2">{likesCount} Likes</span>
-              </div>
-            </>
-          )}
-        </div>
-        {token && (
-          <CommentsProvider>
-            <CommentModal
-              postId={post.id}
-              show={showModal}
-              handleClose={handleClose}
-            />
-          </CommentsProvider>
+        {isOwner && (
+          <>
+            <Button variant="btn-sm outline-secondary" onClick={handleEdit}>
+              <FontAwesomeIcon icon={faEdit} /> Edit
+            </Button>
+            <Button variant="btn-sm outline-danger" onClick={handleDelete}>
+              <FontAwesomeIcon icon={faTrash} /> Delete
+            </Button>
+          </>
         )}
+        {token && (
+          <Button
+            variant="btn-sm outline-primary"
+            onClick={() => setShowCommentModal(true)}
+          >
+            <FontAwesomeIcon icon={faCommentDots} /> Comments
+          </Button>
+        )}
+        <div>
+          <button variant="btn-sm outline-primary" onClick={handleLike}>
+            <FontAwesomeIcon
+              icon={faHeart}
+              className={post.isLiked ? "text-danger" : ""}
+            />{" "}
+            {post.likesCount} Likes
+          </button>
+        </div>
       </Card.Footer>
+      {showEditModal && (
+        <EditPostModal
+          show={showEditModal}
+          handleClose={() => setShowEditModal(false)}
+          postToEdit={post}
+        />
+      )}
+      {showCommentModal && (
+        <CommentsProvider>
+          <CommentModal
+            postId={post.id}
+            show={showCommentModal}
+            handleClose={() => setShowCommentModal(false)}
+          />
+        </CommentsProvider>
+      )}
     </Card>
   );
 }
