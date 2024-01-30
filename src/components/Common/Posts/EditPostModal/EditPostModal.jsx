@@ -36,7 +36,11 @@ function EditPostModal({ show, handleClose, postToEdit }) {
 
     useEffect(() => {
         if (postToEdit) {
-            setPostData(postToEdit);
+            setPostData({
+                ...postToEdit,
+                ingredients: postToEdit.ingredients,
+                recipe: postToEdit.recipe
+            });
             setSelectedTime(postToEdit.time);
             if (postToEdit.image) {
                 setImagePreview(postToEdit.image);
@@ -81,7 +85,6 @@ function EditPostModal({ show, handleClose, postToEdit }) {
             setError(e.response?.data?.message || 'Error occurred while updating post.');
         }
     };
-
     return (
         <Modal show={show} onHide={handleClose} centered>
             <Modal.Header closeButton>

@@ -14,7 +14,9 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons/faHeart";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons/faPlusSquare";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons/faUserCircle";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
+import { faList } from "@fortawesome/free-solid-svg-icons/faList";
 
+import { PostsContext } from "../Posts/PostContext/PostContext";
 
 function Navigation() {
   const { token, logOut } = useAuth();
@@ -37,6 +39,9 @@ function Navigation() {
     handleOffCanvasClose();
     logOut();
   };
+
+  // updating the feed
+  const { resetPage } = useContext(PostsContext);
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary mb-3 sticky-top">
@@ -71,6 +76,10 @@ function Navigation() {
 
               {token && (
                 <>
+                  <Nav.Link onClick={() => resetPage()}>
+                    <FontAwesomeIcon icon={faList} className="me-1" />
+                    Feed
+                  </Nav.Link>
                   <Nav.Link to="/liked">
                     <FontAwesomeIcon icon={faHeart} className="me-1" />
                     Liked

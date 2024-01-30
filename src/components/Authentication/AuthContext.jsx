@@ -22,6 +22,9 @@ export const AuthProvider = ({ children }) => {
           id: response.data.user_id,
           profile: response.data.profile_id
         });
+        
+        console.log(setUser);
+
         setToken(response.data.access);
         setErrors({});
       } else {
@@ -51,6 +54,8 @@ export const AuthProvider = ({ children }) => {
           email: response.data.email,
           profile_id: response.data.profile_id
         });
+
+        console.log(setUser);
         setErrors({});
         return true;
       }
@@ -67,8 +72,9 @@ export const AuthProvider = ({ children }) => {
   const logOut = () => {
     setToken(null);
     setUser(null);
-    setErrors({});
+    setErrors({});    
   };
+  
 
   const contextValue = useMemo(
     () => ({

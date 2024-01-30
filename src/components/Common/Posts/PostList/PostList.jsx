@@ -8,14 +8,19 @@ const PostList = () => {
   const { posts, hasMore, setPage, searchTerm } = useContext(PostsContext);
 
   useEffect(() => {
-    setPage(1);
+  
+    if (searchTerm !== "") {
+      setPage(1); 
+    }
   }, [searchTerm, setPage]);
+  
 
   const filteredPosts = searchTerm
+  
     ? posts.filter(post =>
         post.title.toLowerCase().includes(searchTerm.toLowerCase())
       )
-    : posts;
+    : posts;    
 
   return (
     <InfiniteScroll

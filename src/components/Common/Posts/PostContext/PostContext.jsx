@@ -31,6 +31,7 @@ export const PostsProvider = ({ children }) => {
         const response = await axiosPublicInstance.get(url);
         setPosts(response.data.results);
         setHasMore(response.data.next != null);
+        setHasMore(true);
       } catch (error) {
         console.error("Error fetching posts:", error);
         setHasMore(false);
@@ -57,7 +58,7 @@ export const PostsProvider = ({ children }) => {
       console.error("Error creating post:", error);
     }
   };
-
+// update post 
   const editPost = async (postId, updatedData) => {
     try {
       const response = await axiosFormInstance.put(
@@ -72,7 +73,7 @@ export const PostsProvider = ({ children }) => {
       console.error("Error updating post:", error);
     }
   };
-
+// removing post 
   const removePost = async (postId) => {
     try {
       await axiosFormInstance.delete(`/posts/${postId}/`, axiosConfig);
@@ -83,25 +84,33 @@ export const PostsProvider = ({ children }) => {
   };
 
   // Like a post
-  const addLike = async (postId, userId) => {
-    try {
+
+  const addLike = async (postId) => {
+    try {      
       const response = await axiosFormInstance.post(
-        "/likes/",
-        { post: postId, user: userId },
+        `/posts/${postId}/likes/`,
+        {},
         axiosConfig
       );
-      setPosts((prevPosts) =>
+      if (response.status === 201) {
+        
+        setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
-            ? { ...post, is_liked: true, likes_count: post.likes_count + 1 }
+            ? { ...post, likes_count: post.likes_count + 1 }
             : post
         )
       );
+      }
     } catch (error) {
-      console.error("liking post error:", error);
+      console.error("Error toggling like:", error);
     }
   };
-
+    
+  
+  const resetPage = () => {
+    setPage(1);
+  };
   return (
     <PostsContext.Provider
       value={{
@@ -115,7 +124,8 @@ export const PostsProvider = ({ children }) => {
         addPost,
         editPost,
         removePost,
-        addLike
+        addLike,
+        resetPage,        
       }}
     >
       {children}

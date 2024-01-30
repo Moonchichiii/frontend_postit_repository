@@ -58,30 +58,25 @@ function CreatePostModal({ show, handleClose }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
-
     const formData = new FormData();
     formData.append("title", title);
-    formData.append(
-      "content",
-      `Ingredients:\n${ingredients}\n\nRecipe:\n${recipe}`
-    );
+    formData.append("ingredients", ingredients);
+    formData.append("recipe", recipe);  
     if (image) formData.append("post_image", image);
     formData.append("time", selectedTime);
 
     if (user && user.profile) {
-      formData.append("user", user.id);
-      formData.append("profile", user.profile);
+        formData.append("user", user.id);
+        formData.append("profile", user.profile);
     }
 
     try {
-      await addPost(formData);
-      handleClose();
+        await addPost(formData);
+        handleClose();
     } catch (e) {
-      setError(e.response?.data?.message || "Error arrised! while posting!");
+        setError(e.response?.data?.message || "Error occurred while posting!");
     }
-  };
-
+};
   return (
     
     <Modal show={show} onHide={handleClose} centered>

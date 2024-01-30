@@ -20,7 +20,7 @@ function CommentForm({ onCommentSubmit }) {
   return (
     <Form onSubmit={handleSubmit}>
       {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-      <Form.Group controlId="comment">
+      <Form.Group>
         <Form.Control
           as="textarea"
           value={comment}
