@@ -28,7 +28,7 @@ function CommentModal({ postId, show, handleClose }) {
 
 
 
-  
+
   const handleCommentSubmit = async () => {
     if (comment.length > 200) {
       setErrorMessage("Comment too long. 200 characters max.");
@@ -81,13 +81,14 @@ function CommentModal({ postId, show, handleClose }) {
 
         <h3>Comments</h3>
 
-        <ul>
+        <ol>
           {comments.map((comment) => (
-            <li key={`${comment.profile.id}-${comment.id}`}>
+            <li key={`${comment.profile.id}-${comment.id}`}
+            >
               <strong>{comment.profile_username}:</strong> {comment.content}
             </li>
           ))}
-        </ul>
+        </ol>
       </Modal.Body>
     </Modal>
   );

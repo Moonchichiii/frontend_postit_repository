@@ -7,6 +7,7 @@ import "./App.css";
 
 const Dashboard = lazy(() => import("./Pages/DashBoard/DashBoard"));
 
+
 function App() {
   return (
     <Router>
@@ -19,14 +20,14 @@ function App() {
       >
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route
+                    <Route
             path="/dashboard/*"
             element={
-              <ProtectedRoute>
-                <Dashboard />
+              <ProtectedRoute>                
+                  <Dashboard />                
               </ProtectedRoute>
             }
-          />
+          /> 
         </Routes>
       </Suspense>
     </Router>

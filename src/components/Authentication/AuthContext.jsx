@@ -22,11 +22,11 @@ export const AuthProvider = ({ children }) => {
           id: response.data.user_id,
           profile: response.data.profile_id
         });
-        
+                
         console.log(setUser);
 
         setToken(response.data.access);
-        setErrors({});
+                setErrors({});
       } else {
         setErrors({ login: ["Login failed. Please try again."] });
       }

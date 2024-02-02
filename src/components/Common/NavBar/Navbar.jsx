@@ -8,6 +8,10 @@ import AuthenticationModal from "../../Authentication/Modal/AuthenticationModal"
 import CreatePostModal from "../Posts/CreatePostModal/CreatePostModal";
 
 import ProfileManagerModal from "../Profile/ProfileManagerModal";
+
+import FollowersModal from "../followers/FollowersModal";
+
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons/faHome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons/faHeart";
@@ -15,6 +19,7 @@ import { faPlusSquare } from "@fortawesome/free-solid-svg-icons/faPlusSquare";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons/faUserCircle";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 import { faList } from "@fortawesome/free-solid-svg-icons/faList";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import { PostsContext } from "../Posts/PostContext/PostContext";
 
@@ -26,6 +31,11 @@ function Navigation() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
 
   const [showProfileManagerModal, setShowProfileManagerModal] = useState(false);
+
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+
+  const handleShowFollowers = () => setShowFollowersModal(true);
+  const handleCloseFollowers = () => setShowFollowersModal(false);
 
   // No show OffCanvas
 
@@ -76,13 +86,20 @@ function Navigation() {
 
               {token && (
                 <>
+                 <Nav.Link onClick={handleShowFollowers}>
+            <FontAwesomeIcon icon={faPlus} className="me-1" />
+            Follow
+          </Nav.Link>
+
+                  
+
                   <Nav.Link onClick={() => resetPage()}>
                     <FontAwesomeIcon icon={faList} className="me-1" />
                     Feed
                   </Nav.Link>
                   <Nav.Link to="/liked">
                     <FontAwesomeIcon icon={faHeart} className="me-1" />
-                    Liked
+                    Liked Posts
                   </Nav.Link>
 
                   <Nav.Link onClick={() => setShowCreatePostModal(true)}>
@@ -93,7 +110,7 @@ function Navigation() {
                   <Nav.Link onClick={() => setShowProfileManagerModal(true)}>
                     <FontAwesomeIcon icon={faUserCircle} className="me-1" />
                     Profile
-                  </Nav.Link>
+                  </Nav.Link>                  
                 </>
               )}
             </Nav>
@@ -128,12 +145,15 @@ function Navigation() {
             handleClose={() => setShowCreatePostModal(false)}
           />
         )}
-        {showProfileManagerModal && (
+                 {showProfileManagerModal && (
           <ProfileManagerModal
             show={showProfileManagerModal}
             handleClose={() => setShowProfileManagerModal(false)}
           />
+          
+         
         )}
+        <FollowersModal show={showFollowersModal} handleClose={handleCloseFollowers} />
       </Suspense>
     </Navbar>
   );
