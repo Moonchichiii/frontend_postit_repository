@@ -9,6 +9,8 @@ function CommentModal({ postId, show, handleClose }) {
   const [comment, setComment] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+
+
   useEffect(() => {
     if (show) {
       const fetchComments = async () => {
@@ -23,18 +25,23 @@ function CommentModal({ postId, show, handleClose }) {
         } catch (err) {}
       };
       fetchComments();
+      console.log(fetchComments);
     }
+    sessionStorage.setItem('debugLogs', JSON.stringify({ token, comments, postId,show }));
   }, [show, postId, token]);
 
+  const debugLogs = JSON.parse(sessionStorage.getItem('debugLogs'));
+  console.log(debugLogs);
 
-
+console.log(comment);
 
   const handleCommentSubmit = async () => {
+    event.preventDefault();
     if (comment.length > 200) {
       setErrorMessage("Comment too long. 200 characters max.");
       return;
     }
-
+  
     try {
       const response = await axiosFormInstance.post(
         `/posts/${postId}/comments/`,
@@ -46,9 +53,21 @@ function CommentModal({ postId, show, handleClose }) {
       setComments([...comments, response.data]);
       setComment("");
       setErrorMessage("");
-    } catch (err) {}
-  };
+    } catch (err) {
+      console.error(err);
 
+      if (err.response && [401, 403].includes(err.response.status)) {
+
+
+        setErrorMessage("Session expired. Please log in again.");
+
+      } else {
+
+        setErrorMessage("An error occurred. Please try again later.");
+      }
+    }
+  };
+  
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -83,15 +102,17 @@ function CommentModal({ postId, show, handleClose }) {
 
         <ol>
           {comments.map((comment) => (
-            <li key={`${comment.profile.id}-${comment.id}`}
-            >
+            <li key={`${comment.profile.id}-${comment.id}`}>
               <strong>{comment.profile_username}:</strong> {comment.content}
+              <div className="comment-date">{comment.created_at}</div>
             </li>
           ))}
         </ol>
+
       </Modal.Body>
     </Modal>
   );
 }
+
 
 export default CommentModal;

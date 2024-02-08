@@ -16,6 +16,7 @@ const LandingPage = () => {
         </main>
       </div>
     </PostsProvider>
+    
   );
 };
 

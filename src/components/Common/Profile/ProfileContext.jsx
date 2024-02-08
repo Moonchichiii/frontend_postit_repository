@@ -13,9 +13,10 @@ export const ProfileProvider = ({ children }) => {
       if (!token || !user?.id) return;
 
       const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
+      
       try {
         const response = await axiosFormInstance.get(
-          `/api/profile/${user.id}/`,
+          `/api/profiles/${user.id}/`,
           axiosConfig
         );
         console.log("Profile data:", response.data);
@@ -31,7 +32,7 @@ export const ProfileProvider = ({ children }) => {
     const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
     try {
       const response = await axiosFormInstance.put(
-        `/api/profile/${user.id}/`,
+        `/api/profiles/${user.id}/`,
         formData,
         axiosConfig
       );

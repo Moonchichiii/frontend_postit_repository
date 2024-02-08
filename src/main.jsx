@@ -15,11 +15,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthProvider>
       
 
-      <ProfileProvider>
+      {/* <ProfileProvider> */}
       <FollowerProvider> 
     <App />
     </FollowerProvider>
-  </ProfileProvider>
+  {/* </ProfileProvider> */}
       
       </AuthProvider>  
 

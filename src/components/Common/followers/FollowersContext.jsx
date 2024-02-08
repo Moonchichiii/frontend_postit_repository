@@ -1,90 +1,98 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "../../Authentication/AuthContext";
 import { axiosFormInstance } from "../../../Api/AxiosDefaults";
 
-
-
-
 const FollowerContext = createContext();
 
-// user follower data hook to the modal. 
 export const useFollowerData = () => useContext(FollowerContext);
 
-
-// getting list of followers & following. 
-const getFollowers = async (userId, axiosConfig) => {
-    const response = await axiosFormInstance.get(`/api/followers/`, {        
-        params: { user_id: userId } 
-    });
-    return response.data;
-};
-// fetching popular profiles
-const getPopularProfiles = async (axiosConfig) => {
-    const response = await axiosFormInstance.get('/api/profiles/popular/', axiosConfig); 
-    return response.data;
-};
-
-
-// following function
-const followUser = async (userId, axiosConfig) => {
-    const response = await axiosFormInstance.post(`/follow/`, { user_id: userId }, axiosConfig);
-    return response.data;
-};
-
-// unfollowing function
-const unfollowUser = async (followerId, axiosConfig) => {
-    await axiosFormInstance.delete(`/unfollow/${followerId}/`, axiosConfig);
-};
-
-
-// Provider & followers context
-
 export const FollowerProvider = ({ children }) => {
-    const { token } = useAuth();
-    const [followers, setFollowers] = useState([]);
+  const { token } = useAuth();
+  const [followers, setFollowers] = useState([]);
+  const [popularProfiles, setPopularProfiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const [popularProfiles, setPopularProfiles] = useState([]);
-    const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
+  const getAxiosConfig = () => ({
+    headers: { Authorization: `Bearer ${token}` }
+  });
 
-
-//   Effect hook to fetching followers for the modal when mounted 
-
-useEffect(() => {
-    const fetchFollowers = async () => {
-        const response = await getFollowers(axiosConfig);
-        setFollowers(response.results || []);
+  useEffect(() => {
+    const fetchFollowersAndProfiles = async () => {
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const followersResponse = await axiosFormInstance.get(
+          "/api/followers/",
+          getAxiosConfig()
+        );
+        setFollowers(followersResponse.data.results || []);
+        const profilesResponse = await axiosFormInstance.get(
+          "/api/profiles/",
+          getAxiosConfig()
+        );
+        setPopularProfiles(profilesResponse.data.results || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
+    fetchFollowersAndProfiles();
+  }, [token]);
 
-        // fetching popular profiles 
-        const fetchPopularProfiles = async () => {
-            const response = await getPopularProfiles(axiosConfig);
-            setPopularProfiles(response.results || []);
-        };
-
-        if (token) {
-            fetchFollowers();
-            fetchPopularProfiles();
-        }
+  const handleFollow = async (profileId) => {
+    setIsLoading(true);
+    try {
+      await axiosFormInstance.post(
+        "/api/followers/",
+        { followed_profile: profileId },
+        getAxiosConfig()
+      );
+      await fetchFollowers();
+    } catch (error) {
+      setError("Failed to follow");
+    } finally {
+      setIsLoading(false);
+    }
+    useEffect(() => {
+      fetchFollowers();
+      fetchPopularProfiles();
     }, [token]);
+  };
 
-//  Handler for following
+  const handleUnfollow = async (profileId) => {
+    setIsLoading(true);
+    try {
+      await axiosFormInstance.delete(
+        `/api/followers/${profileId}/`,
+        getAxiosConfig()
+      );
+      await fetchFollowers();
+    } catch (error) {
+      setError("Failed to unfollow");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const handleFollow = async (userId) => {
-        await followUser(userId, axiosConfig);
-        
-    };
-
-// handler for unfollowing
-
-    const handleUnfollow = async (followerId) => {
-        await unfollowUser(followerId, axiosConfig);
-        
-    };
-
-    return (
-        <FollowerContext.Provider value={{ followers, popularProfiles, handleFollow, handleUnfollow }}>
-            {children}
-        </FollowerContext.Provider>
-    );
+  return (
+    <FollowerContext.Provider
+      value={{
+        followers,
+        popularProfiles,
+        handleFollow,
+        handleUnfollow,
+        isLoading,
+        error
+      }}
+    >
+      {children}
+    </FollowerContext.Provider>
+  );
 };

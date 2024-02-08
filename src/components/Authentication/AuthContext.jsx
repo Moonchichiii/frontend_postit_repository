@@ -72,7 +72,8 @@ export const AuthProvider = ({ children }) => {
   const logOut = () => {
     setToken(null);
     setUser(null);
-    setErrors({});    
+    setErrors({});
+    
   };
   
 
